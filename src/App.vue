@@ -3,8 +3,6 @@
     <div class="card">
       <CurrencyItem id="source" v-model="source" title="Source" />
       <CurrencyItem id="target" v-model="target" title="Target" />
-      <!-- <CurrencyInput v-model="targetAmount" title="Target" id="target" /> -->
-      <!-- <CurrencySelect v-model="targetCurrency" :currencies="currencies" /> -->
     </div>
   </div>
 </template>
@@ -32,23 +30,29 @@ export default {
   computed: {
     exchangeRate() {
       return this.$store.getters.getExchangeRate(
-        this.sourceCurrency,
-        this.targetCurrency
+        this.source.currency,
+        this.target.currency
       );
     },
   },
   watch: {
-    exchangeRate: function (val) {
-      this.target = { ...this.target, amount: this.sourceAmount * val };
+    "source.amount": function (val) {
+      this.target = {
+        ...this.target,
+        amount: val * this.exchangeRate,
+      };
     },
-    sourceAmount: function (val) {
-      this.target = { ...this.target, amount: val * this.exchangeRate };
-    },
-    sourceCurrency: function (val) {
+    "source.currency": function (val) {
       this.$store.dispatch("fetchExchangeRates", val);
     },
-    targetCurrency: function () {
-      this.targetAmount = this.sourceAmount * this.exchangeRate;
+    "target.currency": function () {
+      this.target = {
+        ...this.target,
+        amount: this.source.amount * this.exchangeRate,
+      };
+    },
+    exchangeRate: function (val) {
+      this.target = { ...this.target, amount: this.source.amount * val };
     },
   },
 
