@@ -3,10 +3,10 @@
     <label for="currency">{{ title }}</label>
     <input
       :id="title"
-      type="text"
+      type="number"
       min="0"
       :value="value"
-      @input="$emit('input', $event.target.value)"
+      @input="$emit('input', Number($event.target.value))"
     />
   </div>
 </template>
@@ -16,7 +16,7 @@ export default {
   name: "CurrencyInput",
   props: {
     title: String,
-    value: String,
+    value: Number,
   },
 };
 </script>

@@ -1,39 +1,50 @@
 import axios from "axios";
 
 const state = () => ({
-  exchangeRates: [],
+  selectedDate: new Date().toISOString().split("T")[0],
+  exchangeRates: {},
   currencies: [],
 });
 
 const getters = {
   getExchangeRate: (state) => (source, target) => {
-    const baseExchange = state.exchangeRates.find(
-      (exchangeRate) => exchangeRate.base === source
-    );
-    const rate = baseExchange?.rates[target];
+    const rates = state.exchangeRates[state.selectedDate]?.[source];
+    const rate = rates?.[target];
     return rate || 1;
-  },
-  getAllExchangeRates: (state) => () => {
-    const baseExchange = state.exchangeRates[0];
-    return Object.keys(baseExchange.rates);
   },
 };
 
 const actions = {
-  async fetchExchangeRates({ commit }, base = "EUR") {
+  async fetchExchangeRates({ state, commit }, base = "EUR") {
+    const baseExchange = state.exchangeRates[state.selectedDate]?.[base];
+    if (baseExchange) {
+      return;
+    }
+
     const res = await axios(`https://api.ratesapi.io/api/latest?base=${base}`);
-    // TODO: Add cache control.
     commit("setExchangeRates", res.data);
+
+    if (state.currencies.length === 0) {
+      const currencies = Object.keys(res.data.rates).concat(base);
+      commit("setCurrencies", currencies);
+    }
   },
 };
 
 const mutations = {
   setExchangeRates(state, exchangeRates) {
-    state.exchangeRates = state.exchangeRates.concat(exchangeRates);
+    const { date, base, rates } = exchangeRates;
 
-    if (state.currencies.length === 0) {
-      state.currencies = Object.keys(exchangeRates.rates);
-    }
+    state.exchangeRates = {
+      [date]: {
+        ...state.exchangeRates[date],
+        [base]: rates,
+      },
+    };
+  },
+
+  setCurrencies(state, currencies) {
+    state.currencies = currencies;
   },
 };
 

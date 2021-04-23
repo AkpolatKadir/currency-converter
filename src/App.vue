@@ -25,12 +25,12 @@ export default {
   data: function () {
     return {
       source: {
-        amount: "1",
-        currency: "EUR",
+        amount: 1,
+        currency: "",
       },
       target: {
-        amount: "1",
-        currency: "USD",
+        amount: 1,
+        currency: "",
       },
     };
   },
@@ -67,7 +67,10 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("fetchExchangeRates");
+    this.$store.dispatch("fetchExchangeRates").then(() => {
+      this.source.currency = "EUR"; // TODO: Get Local currency.
+      this.target.currency = "USD";
+    });
   },
 };
 </script>
