@@ -1,19 +1,25 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="card">
+      <CurrencyInput title="Source" id="source" />
+      <CurrencyInput title="Target" id="target" />
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CurrencyInput from "./components/CurrencyInput.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    CurrencyInput,
+  },
+
+  created() {
+    this.$store.dispatch("fetchExchangeRates");
+  },
+};
 </script>
 
 <style>
