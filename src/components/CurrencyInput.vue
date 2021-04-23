@@ -1,8 +1,13 @@
 <template>
   <div class="inputGroup">
     <label for="currency">{{ title }}</label>
-    <input id="currency" type="number" min="0" v-model.number="value" />
-    <select></select>
+    <input
+      id="currency"
+      type="number"
+      min="0"
+      :value="value"
+      @input="$emit('input', $event.target.value)"
+    />
   </div>
 </template>
 
@@ -11,24 +16,22 @@ export default {
   name: "CurrencyInput",
   props: {
     title: String,
-  },
-  data: function () {
-    return {
-      value: 1,
-      base: "EUR",
-    };
+    value: Number,
   },
 };
 </script>
 
 <style scoped lang="scss">
 .inputGroup {
+  position: relative;
 }
 label {
-  display: inline-block;
+  position: absolute;
+  top: -20px;
 }
 
 input {
+  font-size: 1.5rem;
   width: 230px;
   height: 60px;
 }
