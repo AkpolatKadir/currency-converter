@@ -1,14 +1,21 @@
 <template>
   <div id="app">
+    <h1>Currency Converter</h1>
     <div class="card">
       <CurrencyItem id="source" v-model="source" title="Source" />
       <CurrencyItem id="target" v-model="target" title="Target" />
+
+      <p>
+        1 {{ source.currency }} = {{ exchangeRate.toFixed(5) }}
+        {{ target.currency }}
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 import CurrencyItem from "./components/CurrencyItem.vue";
+import getConversionResult from "./utils/getConversionResult";
 
 export default {
   name: "App",
@@ -18,11 +25,11 @@ export default {
   data: function () {
     return {
       source: {
-        amount: 1,
+        amount: "1",
         currency: "EUR",
       },
       target: {
-        amount: 1,
+        amount: "1",
         currency: "USD",
       },
     };
@@ -39,7 +46,7 @@ export default {
     "source.amount": function (val) {
       this.target = {
         ...this.target,
-        amount: val * this.exchangeRate,
+        amount: getConversionResult(val, this.exchangeRate),
       };
     },
     "source.currency": function (val) {
@@ -48,11 +55,14 @@ export default {
     "target.currency": function () {
       this.target = {
         ...this.target,
-        amount: this.source.amount * this.exchangeRate,
+        amount: getConversionResult(this.source.amount, this.exchangeRate),
       };
     },
     exchangeRate: function (val) {
-      this.target = { ...this.target, amount: this.source.amount * val };
+      this.target = {
+        ...this.target,
+        amount: getConversionResult(this.source.amount, val),
+      };
     },
   },
 
@@ -62,7 +72,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-size: 16px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -71,5 +81,17 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  min-height: 250px;
+  width: 100%;
+  max-width: 984px;
+  margin: auto;
+  box-shadow: 0 4px 29px rgb(0 0 0 / 10%);
 }
 </style>

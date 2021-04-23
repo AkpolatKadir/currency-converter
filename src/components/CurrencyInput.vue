@@ -2,8 +2,8 @@
   <div class="inputGroup">
     <label for="currency">{{ title }}</label>
     <input
-      id="currency"
-      type="number"
+      :id="title"
+      type="text"
       min="0"
       :value="value"
       @input="$emit('input', $event.target.value)"
@@ -16,7 +16,7 @@ export default {
   name: "CurrencyInput",
   props: {
     title: String,
-    value: Number,
+    value: String,
   },
 };
 </script>
@@ -27,12 +27,12 @@ export default {
 }
 label {
   position: absolute;
-  top: -20px;
+  top: -22px;
 }
 
 input {
   font-size: 1.5rem;
   width: 230px;
-  height: 60px;
+  height: 100%;
 }
 </style>

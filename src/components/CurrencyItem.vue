@@ -1,6 +1,6 @@
 <template>
   <div class="currencyItem">
-    <CurrencyInput v-model="value.amount" :title="title" id="source" />
+    <CurrencyInput v-model.number="value.amount" :title="title" />
     <CurrencySelect v-model="value.currency" :currencies="currencies" />
   </div>
 </template>
@@ -32,5 +32,6 @@ export default {
   display: flex;
   gap: 10px;
   width: fit-content;
+  height: 72px;
 }
 </style>

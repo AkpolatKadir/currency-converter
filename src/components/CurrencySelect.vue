@@ -21,4 +21,10 @@ export default {
 </script>
 
 <style>
+select {
+  width: 100px;
+  height: 100%;
+  font-size: 1.5rem;
+  padding-left: 15px;
+}
 </style>
