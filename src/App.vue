@@ -6,6 +6,8 @@
       <input
         class="inputDate"
         type="date"
+        min="1999-01-04"
+        :max="today"
         id="conversion-history-date"
         name="conversion-history-date"
         aria-label="Conversion Rates Date"
@@ -14,8 +16,18 @@
       />
 
       <div class="currencyItems">
-        <CurrencyItem id="source" v-model="source" title="Source" />
-        <CurrencyItem id="target" v-model="target" title="Target" />
+        <CurrencyItem
+          id="source"
+          v-model="source"
+          title="Source"
+          :disabled="error"
+        />
+        <CurrencyItem
+          id="target"
+          v-model="target"
+          title="Target"
+          :disabled="error"
+        />
       </div>
 
       <p>
@@ -28,8 +40,8 @@
 
 <script>
 import CurrencyItem from "./components/CurrencyItem.vue";
-import getConversionResult from "./utils/getConversionResult";
-import { mapMutations, mapGetters, mapActions } from "vuex";
+import { getConversionResult, getToday } from "./utils";
+import { mapMutations, mapGetters, mapActions, mapState } from "vuex";
 
 export default {
   name: "App",
@@ -55,8 +67,12 @@ export default {
   },
   computed: {
     ...mapGetters(["getExchangeRate"]),
-    selectedDate() {
-      return this.$store.state.exchangeRates.selectedDate;
+    ...mapState({
+      error: (state) => state.exchangeRates.error,
+      selectedDate: (state) => state.exchangeRates.selectedDate,
+    }),
+    today() {
+      return getToday();
     },
   },
   watch: {

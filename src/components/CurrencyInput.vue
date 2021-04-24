@@ -6,6 +6,7 @@
       type="text"
       :value="value"
       @input="$emit('input', Number($event.target.value))"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -16,6 +17,7 @@ export default {
   props: {
     title: String,
     value: String,
+    disabled: Boolean,
   },
 };
 </script>

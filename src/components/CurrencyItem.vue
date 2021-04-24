@@ -1,6 +1,10 @@
 <template>
   <div class="currencyItem">
-    <CurrencyInput v-model.number="value.amount" :title="title" />
+    <CurrencyInput
+      v-model.number="value.amount"
+      :title="title"
+      :disabled="disabled"
+    />
     <CurrencySelect v-model="value.currency" :currencies="currencies" />
   </div>
 </template>
@@ -14,6 +18,7 @@ export default {
   props: {
     title: String,
     value: Object,
+    disabled: Boolean,
   },
   components: {
     CurrencySelect,

@@ -1,9 +1,11 @@
 import axios from "axios";
+import { getToday } from "../../utils";
 
 const state = () => ({
-  selectedDate: new Date().toISOString().split("T")[0],
+  selectedDate: getToday(),
   exchangeRates: {},
   currencies: [],
+  error: null,
 });
 
 const getters = {
@@ -25,12 +27,21 @@ const actions = {
       return;
     }
 
-    const res = await axios(`https://api.ratesapi.io/api/${date}?base=${base}`);
-    commit("setExchangeRates", { exchangeRates: res.data, date });
+    try {
+      commit("resetError");
 
-    if (state.currencies.length === 0) {
-      const currencies = Object.keys(res.data.rates).concat(base);
-      commit("setCurrencies", currencies);
+      const res = await axios(
+        `https://api.ratesapi.io/api/${date}?base=${base}`
+      );
+      commit("setExchangeRates", { exchangeRates: res.data, date });
+
+      if (state.currencies.length === 0) {
+        const currencies = Object.keys(res.data.rates).concat(base);
+        commit("setCurrencies", currencies);
+      }
+    } catch (e) {
+      console.log(e);
+      commit("setError", e);
     }
   },
 };
@@ -46,11 +57,19 @@ const mutations = {
   },
 
   setCurrencies(state, currencies) {
-    state.currencies = currencies;
+    state.currencies = currencies.sort();
   },
 
   setSelectedDate(state, date) {
     state.selectedDate = date;
+  },
+
+  setError(state, error) {
+    state.error = error;
+  },
+
+  resetError(state) {
+    state.error = null;
   },
 };
 
