@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1>Currency Converter</h1>
+    <h1 class="appName">Currency Converter</h1>
 
     <div class="card">
       <input
@@ -31,7 +31,8 @@
       </div>
 
       <p>
-        1 {{ source.currency }} = {{ exchangeRate.toFixed(5) }}
+        1 {{ source.currency }} =
+        {{ !isLoading ? exchangeRateText : "..." }}
         {{ target.currency }}
       </p>
     </div>
@@ -41,6 +42,7 @@
 <script>
 import CurrencyItem from "./components/CurrencyItem.vue";
 import { getConversionResult, getToday } from "./utils";
+import { PRECISION } from "./constants";
 import { mapMutations, mapGetters, mapActions, mapState } from "vuex";
 
 export default {
@@ -64,15 +66,25 @@ export default {
   methods: {
     ...mapMutations(["setSelectedDate"]),
     ...mapActions(["fetchExchangeRates"]),
+    openFailureToast(errorMessage) {
+      this.$toast.open({
+        message: errorMessage,
+        type: "error",
+      });
+    },
   },
   computed: {
     ...mapGetters(["getExchangeRate"]),
     ...mapState({
       error: (state) => state.exchangeRates.error,
+      isLoading: (state) => state.exchangeRates.isLoading,
       selectedDate: (state) => state.exchangeRates.selectedDate,
     }),
     today() {
       return getToday();
+    },
+    exchangeRateText() {
+      return this.exchangeRate.toFixed(PRECISION);
     },
   },
   watch: {
@@ -113,6 +125,9 @@ export default {
         amount: getConversionResult(this.source.amount, val),
       };
     },
+    error: function (val) {
+      if (val) this.openFailureToast(val);
+    },
   },
 
   created() {
@@ -131,13 +146,14 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 120px;
 }
 
 .inputDate {
   margin-bottom: 60px;
 }
-h1 {
+
+.appName {
   text-align: center;
 }
 

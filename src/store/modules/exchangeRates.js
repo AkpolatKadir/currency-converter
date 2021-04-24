@@ -1,10 +1,12 @@
 import axios from "axios";
 import { getToday } from "../../utils";
+import { defaultNetworkErrorMessage } from "../../constants";
 
 const state = () => ({
   selectedDate: getToday(),
   exchangeRates: {},
   currencies: [],
+  isLoading: false,
   error: null,
 });
 
@@ -28,20 +30,23 @@ const actions = {
     }
 
     try {
-      commit("resetError");
+      commit("fetchExchangeRatesRequest");
 
       const res = await axios(
         `https://api.ratesapi.io/api/${date}?base=${base}`
       );
       commit("setExchangeRates", { exchangeRates: res.data, date });
+      commit("fetchExchangeRatesSuccess");
 
       if (state.currencies.length === 0) {
         const currencies = Object.keys(res.data.rates).concat(base);
         commit("setCurrencies", currencies);
       }
     } catch (e) {
-      console.log(e);
-      commit("setError", e);
+      commit(
+        "fetchExchangeRatesFailure",
+        e.response?.data?.error || defaultNetworkErrorMessage
+      );
     }
   },
 };
@@ -64,12 +69,19 @@ const mutations = {
     state.selectedDate = date;
   },
 
-  setError(state, error) {
-    state.error = error;
+  fetchExchangeRatesRequest(state) {
+    state.error = null;
+    state.isLoading = true;
   },
 
-  resetError(state) {
+  fetchExchangeRatesSuccess(state) {
     state.error = null;
+    state.isLoading = false;
+  },
+
+  fetchExchangeRatesFailure(state, error) {
+    state.error = error;
+    state.isLoading = false;
   },
 };
 

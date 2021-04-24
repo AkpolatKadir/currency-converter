@@ -1,4 +1,4 @@
-const PRECISION = 5;
+import { PRECISION } from "../constants";
 
 export function getConversionResult(amount, exchangeRate) {
   return (amount * exchangeRate).toFixed(PRECISION);
