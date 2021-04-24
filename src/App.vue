@@ -6,10 +6,11 @@
       <input
         class="inputDate"
         type="date"
-        id="start"
-        name="trip-start"
+        id="conversion-history-date"
+        name="conversion-history-date"
+        aria-label="Conversion Rates Date"
         :value="selectedDate"
-        @change="onDateChange"
+        @change="setSelectedDate($event.target.value)"
       />
 
       <div class="currencyItems">
@@ -28,7 +29,7 @@
 <script>
 import CurrencyItem from "./components/CurrencyItem.vue";
 import getConversionResult from "./utils/getConversionResult";
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 export default {
   name: "App",
@@ -50,11 +51,10 @@ export default {
   },
   methods: {
     ...mapMutations(["setSelectedDate"]),
-    onDateChange(e) {
-      this.setSelectedDate(e.target.value);
-    },
+    ...mapActions(["fetchExchangeRates"]),
   },
   computed: {
+    ...mapGetters(["getExchangeRate"]),
     selectedDate() {
       return this.$store.state.exchangeRates.selectedDate;
     },
@@ -67,36 +67,29 @@ export default {
       };
     },
     "source.currency": function (val) {
-      this.$store.dispatch("fetchExchangeRates", { base: val }).then(() => {
-        this.exchangeRate = this.$store.getters.getExchangeRate(
+      this.fetchExchangeRates({ base: val }).then(() => {
+        this.exchangeRate = this.getExchangeRate(
           this.source.currency,
           this.target.currency
         );
       });
     },
     "target.currency": function () {
-      this.exchangeRate = this.$store.getters.getExchangeRate(
+      this.exchangeRate = this.getExchangeRate(
         this.source.currency,
         this.target.currency
       );
-
-      this.target = {
-        ...this.target,
-        amount: getConversionResult(this.source.amount, this.exchangeRate),
-      };
     },
     selectedDate: function (val) {
-      this.$store
-        .dispatch("fetchExchangeRates", {
-          base: this.source.currency,
-          date: val,
-        })
-        .then(() => {
-          this.exchangeRate = this.$store.getters.getExchangeRate(
-            this.source.currency,
-            this.target.currency
-          );
-        });
+      this.fetchExchangeRates({
+        base: this.source.currency,
+        date: val,
+      }).then(() => {
+        this.exchangeRate = this.getExchangeRate(
+          this.source.currency,
+          this.target.currency
+        );
+      });
     },
     exchangeRate: function (val) {
       this.target = {
@@ -107,7 +100,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("fetchExchangeRates", { base: "EUR" }).then(() => {
+    this.fetchExchangeRates({ base: "EUR" }).then(() => {
       this.source.currency = "EUR"; // TODO: Get Local currency.
       this.target.currency = "USD";
     });
