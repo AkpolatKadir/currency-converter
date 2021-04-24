@@ -2,11 +2,12 @@
   <div class="inputGroup">
     <label for="currency">{{ title }}</label>
     <input
-      :id="title"
+      :id="id"
       type="text"
       :value="value"
       @input="$emit('input', Number($event.target.value))"
       :disabled="disabled"
+      @focus="$emit('focus', id)"
     />
   </div>
 </template>
@@ -15,6 +16,7 @@
 export default {
   name: "CurrencyInput",
   props: {
+    id: String,
     title: String,
     value: String,
     disabled: Boolean,

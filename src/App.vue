@@ -21,12 +21,14 @@
           v-model="source"
           title="Source"
           :disabled="error"
+          @onFocus="setFocus"
         />
         <CurrencyItem
           id="target"
           v-model="target"
           title="Target"
           :disabled="error"
+          @onFocus="setFocus"
         />
       </div>
 
@@ -61,6 +63,7 @@ export default {
         currency: "",
       },
       exchangeRate: 1,
+      focusedInput: "source",
     };
   },
   methods: {
@@ -71,6 +74,9 @@ export default {
         message: errorMessage,
         type: "error",
       });
+    },
+    setFocus(input) {
+      this.focusedInput = input;
     },
   },
   computed: {
@@ -89,10 +95,12 @@ export default {
   },
   watch: {
     "source.amount": function (val) {
-      this.target = {
-        ...this.target,
-        amount: getConversionResult(val, this.exchangeRate),
-      };
+      if (this.focusedInput === "source") {
+        this.target = {
+          ...this.target,
+          amount: getConversionResult(val, this.exchangeRate),
+        };
+      }
     },
     "source.currency": function (val) {
       this.fetchExchangeRates({ base: val }).then(() => {
@@ -101,6 +109,14 @@ export default {
           this.target.currency
         );
       });
+    },
+    "target.amount": function (val) {
+      if (this.focusedInput === "target") {
+        this.source = {
+          ...this.source,
+          amount: getConversionResult(val, 1 / this.exchangeRate),
+        };
+      }
     },
     "target.currency": function () {
       this.exchangeRate = this.getExchangeRate(

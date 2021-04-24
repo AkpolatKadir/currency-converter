@@ -1,9 +1,11 @@
 <template>
-  <div class="currencyItem">
+  <div class="conversionItem">
     <CurrencyInput
-      v-model.number="value.amount"
+      :id="id"
+      v-model="value.amount"
       :title="title"
       :disabled="disabled"
+      @focus="$emit('onFocus', $event)"
     />
     <CurrencySelect v-model="value.currency" :currencies="currencies" />
   </div>
@@ -16,6 +18,7 @@ import CurrencySelect from "./CurrencySelect.vue";
 export default {
   name: "CurrencyItem",
   props: {
+    id: String,
     title: String,
     value: Object,
     disabled: Boolean,
@@ -33,7 +36,7 @@ export default {
 </script>
 
 <style>
-.currencyItem {
+.conversionItem {
   display: flex;
   gap: 10px;
   width: fit-content;
