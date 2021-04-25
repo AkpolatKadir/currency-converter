@@ -68,7 +68,6 @@
 <script>
 import CurrencyItem from "@/components/CurrencyItem.vue";
 import { getConversionResult, getDateText } from "@/utils";
-import { PRECISION } from "@/constants";
 import { mapMutations, mapGetters, mapActions, mapState } from "vuex";
 
 export default {
@@ -128,7 +127,7 @@ export default {
         return "xxx";
       }
 
-      return this.exchangeRate.toFixed(PRECISION);
+      return this.exchangeRate.toFixed(5);
     },
   },
   watch: {
