@@ -1,9 +1,9 @@
 import axios from "axios";
-import { getToday } from "../../utils";
+import { getDateText } from "../../utils";
 import { defaultNetworkErrorMessage } from "../../constants";
 
 const state = () => ({
-  selectedDate: getToday(),
+  selectedDate: getDateText(new Date()),
   exchangeRates: {},
   currencies: [],
   isLoading: false,
@@ -24,8 +24,8 @@ const actions = {
     { state, commit },
     { date = state.selectedDate, base = "EUR" }
   ) {
-    const baseExchange = state.exchangeRates[date]?.[base];
-    if (baseExchange) {
+    const hasBaseExchange = state.exchangeRates[date]?.[base];
+    if (hasBaseExchange) {
       return;
     }
 

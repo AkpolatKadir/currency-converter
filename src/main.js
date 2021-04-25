@@ -2,17 +2,11 @@ import Vue from "vue";
 import App from "./App.vue";
 import store from "./store";
 import "reset-css";
-import axios from "axios";
-import VueToast from "vue-toast-notification";
-import "vue-toast-notification/dist/theme-sugar.css";
+import { initFontAwesome, initAxios, initToastNotification } from "@/inits";
 
-axios.defaults.baseURL = "https://api.ratesapi.io/api";
-
-Vue.use(VueToast, {
-  position: "top-left",
-  duration: 5000,
-  dismissible: true,
-});
+initFontAwesome();
+initAxios();
+initToastNotification();
 
 Vue.config.productionTip = false;
 

@@ -31,6 +31,15 @@
           :disabled="error"
           @onFocus="setFocus"
         />
+
+        <font-awesome-icon
+          class="switchIcon"
+          icon="arrows-alt-h"
+          size="4x"
+          @click="switchCurrencies"
+          aria-label="Switch Currencies"
+        />
+
         <CurrencyItem
           id="target"
           v-model="target"
@@ -58,7 +67,7 @@
 
 <script>
 import CurrencyItem from "@/components/CurrencyItem.vue";
-import { getConversionResult, getToday } from "@/utils";
+import { getConversionResult, getDateText } from "@/utils";
 import { PRECISION } from "@/constants";
 import { mapMutations, mapGetters, mapActions, mapState } from "vuex";
 
@@ -93,6 +102,12 @@ export default {
     setFocus(input) {
       this.focusedInput = input;
     },
+    switchCurrencies() {
+      const temp = this.source.currency;
+
+      this.source.currency = this.target.currency;
+      this.target.currency = temp;
+    },
   },
   computed: {
     ...mapGetters(["getExchangeRate"]),
@@ -102,7 +117,8 @@ export default {
       selectedDate: (state) => state.exchangeRates.selectedDate,
     }),
     today() {
-      return getToday();
+      const now = new Date();
+      return getDateText(now);
     },
     exchangeRateText() {
       if (this.isLoading) {
@@ -202,14 +218,11 @@ export default {
 }
 
 .card {
-  display: block;
-  justify-content: center;
-  align-items: center;
   padding: 20px 15px;
   border-radius: 6px;
   gap: 10px;
   min-height: 250px;
-  width: 100%;
+  width: 90%;
   max-width: 984px;
   margin: auto;
   box-shadow: 0 4px 29px rgb(0 0 0 / 10%);
@@ -221,9 +234,27 @@ export default {
 
 .currencyItems {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
   gap: 20px;
   margin-bottom: 50px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.switchIcon {
+  cursor: pointer;
+  border-radius: 50%;
+  @media (max-width: 768px) {
+    transform: rotate(90deg);
+  }
+
+  &:hover {
+    background: rgba(grey, 0.2);
+  }
 }
 
 .exchangeInfo {

@@ -60,7 +60,7 @@ label {
 
 input {
   font-size: 1.5rem;
-  width: 230px;
+  max-width: 230px;
   height: 100%;
 }
 </style>

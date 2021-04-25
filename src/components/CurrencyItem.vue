@@ -7,7 +7,11 @@
       :disabled="disabled"
       @focus="$emit('onFocus', $event)"
     />
-    <CurrencySelect v-model="value.currency" :currencies="currencies" />
+    <CurrencySelect
+      v-model="value.currency"
+      :id="id"
+      :currencies="currencies"
+    />
   </div>
 </template>
 
