@@ -193,12 +193,14 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/styles/mixins/screen.scss";
+
 #app {
   font-size: 16px;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: var(--text);
   margin-top: 120px;
 }
 
@@ -227,7 +229,7 @@ export default {
   box-shadow: 0 4px 29px rgb(0 0 0 / 10%);
 
   &--error {
-    border: 1px solid red;
+    border: 1px solid var(--error-red);
   }
 }
 
@@ -239,7 +241,7 @@ export default {
   gap: 20px;
   margin-bottom: 50px;
 
-  @media (max-width: 768px) {
+  @include screen("mobile") {
     grid-template-columns: 1fr;
   }
 }
@@ -247,8 +249,10 @@ export default {
 .switchIcon {
   cursor: pointer;
   border-radius: 50%;
-  @media (max-width: 768px) {
+
+  @include screen("mobile") {
     transform: rotate(90deg);
+    grid-template-columns: 1fr;
   }
 
   &:hover {
@@ -261,10 +265,10 @@ export default {
   font-weight: 600;
 
   .exchangeRate {
-    color: #2ed06e;
+    color: var(--green);
 
     &--error {
-      color: red;
+      color: var(--error-red);
     }
   }
 }

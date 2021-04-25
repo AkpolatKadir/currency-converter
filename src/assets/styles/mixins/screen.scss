@@ -1,0 +1,36 @@
+@mixin screen($size) {
+  $desktop: '(min-width: 1200px)';
+  $tablet: '(min-width: 769px)';
+  $mobile: '(max-width: 768px)';
+
+  @if $size == desktop {
+    @media only screen and #{$desktop} {
+      @content;
+    }
+  } @else if $size == tablet {
+    @media only screen and #{$tablet} {
+      @content;
+    }
+  } @else if $size == mobile {
+    @media only screen and #{$mobile} {
+      @content;
+    }
+  } @else {
+    @media only screen and #{$size} {
+      @content;
+    }
+  }
+}
+
+// Usage
+// .wrapper {
+//   margin: 0 auto;
+//   width: 100%;
+//   @include screen('tablet') {
+//     width: 90%;
+//   }
+
+//   @include screen('tablet') {
+//     width: 85%;
+//   }
+// }

@@ -3,6 +3,7 @@ import App from "./App.vue";
 import store from "./store";
 import "reset-css";
 import { initFontAwesome, initAxios, initToastNotification } from "@/inits";
+import "@/assets/styles/colors.scss";
 
 initFontAwesome();
 initAxios();
