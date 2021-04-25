@@ -9,14 +9,13 @@
       }"
     >
       <div class="conversionDate">
-        <label for="inputDate">Conversion Date:</label>
+        <label for="conversion-history-date">Conversion Date:</label>
         <input
           type="date"
           min="1999-01-04"
           :max="today"
           id="conversion-history-date"
           name="conversion-history-date"
-          aria-label="Conversion Date"
           :value="selectedDate"
           @change="setSelectedDate($event.target.value)"
           placeholder="1999-01-04"
@@ -184,8 +183,9 @@ export default {
   },
 
   created() {
-    this.fetchExchangeRates({ base: "EUR" }).then(() => {
-      this.source.currency = "EUR"; // TODO: Get Local currency.
+    const defaultSourceBase = "EUR";
+    this.fetchExchangeRates({ base: defaultSourceBase }).then(() => {
+      this.source.currency = defaultSourceBase;
       this.target.currency = "USD";
     });
   },
@@ -259,6 +259,7 @@ export default {
 .exchangeInfo {
   font-size: 1.375rem;
   font-weight: 600;
+
   .exchangeRate {
     color: #2ed06e;
 
