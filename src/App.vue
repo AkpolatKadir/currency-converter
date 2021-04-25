@@ -32,7 +32,7 @@
         />
       </div>
 
-      <p>
+      <p class="exchangeRate">
         1 {{ source.currency }} =
         {{ !isLoading ? exchangeRateText : "..." }}
         {{ target.currency }}
@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import CurrencyItem from "./components/CurrencyItem.vue";
-import { getConversionResult, getToday } from "./utils";
-import { PRECISION } from "./constants";
+import CurrencyItem from "@/components/CurrencyItem.vue";
+import { getConversionResult, getToday } from "@/utils";
+import { PRECISION } from "@/constants";
 import { mapMutations, mapGetters, mapActions, mapState } from "vuex";
 
 export default {
@@ -174,7 +174,8 @@ export default {
 }
 
 .currencyItems {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 

@@ -38,7 +38,6 @@ export default {
 <style>
 .conversionItem {
   display: flex;
-  gap: 10px;
   width: fit-content;
   height: 72px;
 }
