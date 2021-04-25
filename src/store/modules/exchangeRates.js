@@ -60,7 +60,7 @@ const mutations = {
   },
 
   setCurrencies(state, currencies) {
-    state.currencies = currencies.sort();
+    state.currencies = [...currencies].sort();
   },
 
   setSelectedDate(state, date) {

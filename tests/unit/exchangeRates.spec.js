@@ -68,6 +68,95 @@ describe("getters", () => {
 });
 
 describe("mutations", () => {
+  describe("setExchangeRates", () => {
+    let state;
+    let mockBaseResponse;
+    let mockRatesResponse;
+    beforeEach(() => {
+      state = {
+        selectedDate: "2001-02-20",
+        exchangeRates: {
+          "2001-02-20": {
+            EUR: {
+              TRY: 1.5,
+              USD: 1.2,
+            },
+          },
+        },
+      };
+
+      mockBaseResponse = "USD";
+      mockRatesResponse = {
+        TRY: 6,
+        EUR: 0.8,
+      };
+    });
+
+    test("Sets exchange rates and preserves current data in same date", () => {
+      const date = "2001-02-20";
+      const exchangeRates = {
+        base: mockBaseResponse,
+        rates: {
+          ...mockRatesResponse,
+        },
+      };
+
+      mutations.setExchangeRates(state, { exchangeRates, date });
+
+      expect(state.exchangeRates).toEqual({
+        "2001-02-20": {
+          EUR: {
+            TRY: 1.5,
+            USD: 1.2,
+          },
+          [mockBaseResponse]: {
+            ...mockRatesResponse,
+          },
+        },
+      });
+    });
+
+    test("Sets exchange rates under a new date", () => {
+      const date = "2001-02-25";
+      const exchangeRates = {
+        base: mockBaseResponse,
+        rates: {
+          ...mockRatesResponse,
+        },
+      };
+
+      mutations.setExchangeRates(state, { exchangeRates, date });
+
+      expect(state.exchangeRates).toEqual({
+        "2001-02-20": {
+          EUR: {
+            TRY: 1.5,
+            USD: 1.2,
+          },
+        },
+        [date]: {
+          [mockBaseResponse]: {
+            ...mockRatesResponse,
+          },
+        },
+      });
+    });
+  });
+
+  describe("setCurrencies", () => {
+    test("Sorts and sets currencies", () => {
+      const state = {
+        currencies: [],
+      };
+      const mockCurrencies = ["USD", "AUD", "EUR"];
+      const expectedResult = ["AUD", "EUR", "USD"];
+
+      mutations.setCurrencies(state, mockCurrencies);
+
+      expect(state.currencies).toEqual(expectedResult);
+    });
+  });
+
   describe("setSelectedDate", () => {
     test("Sets selected date", () => {
       const state = {
