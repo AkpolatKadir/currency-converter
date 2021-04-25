@@ -10,6 +10,7 @@
       :disabled="disabled"
       @focus="$emit('focus', id)"
       placeholder="12345.67"
+      pattern="\d*"
     />
   </div>
 </template>
