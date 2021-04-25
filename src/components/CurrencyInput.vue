@@ -4,7 +4,7 @@
     <input
       data-testid="input"
       :id="id"
-      type="text"
+      type="number"
       :value="value"
       @input="onInput"
       :disabled="disabled"
@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import { getSanitizedInputValue } from "../utils";
-
 export default {
   name: "CurrencyInput",
   props: {
@@ -41,7 +39,6 @@ export default {
 
   methods: {
     onInput(e) {
-      e.target.value = getSanitizedInputValue(e.target.value);
       if (e.target.value) this.$emit("input", e.target.value);
     },
   },
