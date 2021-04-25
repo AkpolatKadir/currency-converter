@@ -14,8 +14,14 @@
 <script>
 export default {
   props: {
-    currencies: Array,
-    value: String,
+    currencies: {
+      type: Array,
+      required: true,
+    },
+    value: {
+      type: String,
+      required: true,
+    },
   },
 };
 </script>

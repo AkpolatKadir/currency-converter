@@ -9,6 +9,7 @@
       @input="onInput"
       :disabled="disabled"
       @focus="$emit('focus', id)"
+      placeholder="12345.67"
     />
   </div>
 </template>

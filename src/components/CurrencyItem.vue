@@ -18,10 +18,22 @@ import CurrencySelect from "./CurrencySelect.vue";
 export default {
   name: "CurrencyItem",
   props: {
-    id: String,
-    title: String,
-    value: Object,
-    disabled: Boolean,
+    id: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    value: {
+      type: Object,
+      required: true,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     CurrencySelect,

@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "jest": "^26.6.3",
+    "reset-css": "^5.0.1",
     "vue": "^2.6.11",
     "vue-toast-notification": "^0.6.1"
   },

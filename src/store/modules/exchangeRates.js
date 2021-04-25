@@ -32,9 +32,7 @@ const actions = {
     try {
       commit("fetchExchangeRatesRequest");
 
-      const res = await axios(
-        `https://api.ratesapi.io/api/${date}?base=${base}`
-      );
+      const res = await axios(`/${date}?base=${base}`);
       commit("setExchangeRates", { exchangeRates: res.data, date });
       commit("fetchExchangeRatesSuccess");
 

@@ -2,18 +2,26 @@
   <div id="app">
     <h1 class="appName">Currency Converter</h1>
 
-    <div class="card">
-      <input
-        class="inputDate"
-        type="date"
-        min="1999-01-04"
-        :max="today"
-        id="conversion-history-date"
-        name="conversion-history-date"
-        aria-label="Conversion Rates Date"
-        :value="selectedDate"
-        @change="setSelectedDate($event.target.value)"
-      />
+    <div
+      class="card"
+      :class="{
+        'card--error': error,
+      }"
+    >
+      <div class="conversionDate">
+        <label for="inputDate">Conversion Date:</label>
+        <input
+          type="date"
+          min="1999-01-04"
+          :max="today"
+          id="conversion-history-date"
+          name="conversion-history-date"
+          aria-label="Conversion Date"
+          :value="selectedDate"
+          @change="setSelectedDate($event.target.value)"
+          placeholder="1999-01-04"
+        />
+      </div>
 
       <div class="currencyItems">
         <CurrencyItem
@@ -32,9 +40,16 @@
         />
       </div>
 
-      <p class="exchangeRate">
+      <p class="exchangeInfo">
         1 {{ source.currency }} =
-        {{ !isLoading ? exchangeRateText : "..." }}
+        <span
+          class="exchangeRate"
+          :class="{
+            'exchangeRate--error': error,
+          }"
+        >
+          {{ exchangeRateText }}</span
+        >
         {{ target.currency }}
       </p>
     </div>
@@ -90,6 +105,13 @@ export default {
       return getToday();
     },
     exchangeRateText() {
+      if (this.isLoading) {
+        return "...";
+      }
+      if (this.error) {
+        return "xxx";
+      }
+
       return this.exchangeRate.toFixed(PRECISION);
     },
   },
@@ -165,18 +187,18 @@ export default {
   margin-top: 120px;
 }
 
-.inputDate {
+.conversionDate {
   margin-bottom: 60px;
+
+  label {
+    margin-right: 10px;
+  }
 }
 
 .appName {
   text-align: center;
-}
-
-.currencyItems {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
 .card {
@@ -191,5 +213,28 @@ export default {
   max-width: 984px;
   margin: auto;
   box-shadow: 0 4px 29px rgb(0 0 0 / 10%);
+
+  &--error {
+    border: 1px solid red;
+  }
+}
+
+.currencyItems {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 50px;
+}
+
+.exchangeInfo {
+  font-size: 1.375rem;
+  font-weight: 600;
+  .exchangeRate {
+    color: #2ed06e;
+
+    &--error {
+      color: red;
+    }
+  }
 }
 </style>
