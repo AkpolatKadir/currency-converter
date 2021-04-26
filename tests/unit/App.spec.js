@@ -101,4 +101,117 @@ describe("App", () => {
       currency: "TRY",
     });
   });
+
+  it("Source amount change updates target amount", async () => {
+    const mockExchangeRate = 1.2;
+    const mockGetExchangeRate = function() {
+      return jest.fn().mockReturnValue(mockExchangeRate);
+    };
+
+    getters = {
+      getExchangeRate: mockGetExchangeRate,
+    };
+
+    store = new Vuex.Store({
+      mutations,
+      state,
+      actions,
+      getters,
+    });
+
+    const mockSource = {
+      amount: "10",
+      currency: "EUR",
+    };
+
+    const expectedResult = {
+      amount: "12.000",
+      currency: "USD",
+    };
+
+    const wrapper = factory({}, store);
+    await localVue.nextTick(); // Skip created() life cycle data change
+
+    await wrapper.setData({ source: mockSource });
+
+    const { target } = wrapper.vm.$data;
+
+    expect(target).toEqual(expectedResult);
+  });
+
+  it("Target amount change updates source amount if its focused", async () => {
+    const mockExchangeRate = 2;
+    const mockGetExchangeRate = function() {
+      return jest.fn().mockReturnValue(mockExchangeRate);
+    };
+
+    getters = {
+      getExchangeRate: mockGetExchangeRate,
+    };
+
+    store = new Vuex.Store({
+      mutations,
+      state,
+      actions,
+      getters,
+    });
+
+    const mockTarget = {
+      amount: "10",
+      currency: "USD",
+    };
+
+    const expectedResult = {
+      amount: "5.000",
+      currency: "EUR",
+    };
+
+    const wrapper = factory({}, store);
+    await localVue.nextTick(); // Skip created() life cycle data change
+
+    await wrapper.setData({ focusedInput: "target" });
+
+    await wrapper.setData({ target: mockTarget });
+
+    const { source } = wrapper.vm.$data;
+
+    expect(source).toEqual(expectedResult);
+  });
+
+  it("Target amount change doesn't update source amount if its not focused", async () => {
+    const mockExchangeRate = 2;
+    const mockGetExchangeRate = function() {
+      return jest.fn().mockReturnValue(mockExchangeRate);
+    };
+
+    getters = {
+      getExchangeRate: mockGetExchangeRate,
+    };
+
+    store = new Vuex.Store({
+      mutations,
+      state,
+      actions,
+      getters,
+    });
+
+    const mockTarget = {
+      amount: "10",
+      currency: "USD",
+    };
+
+    const expectedResult = {
+      amount: "1",
+      currency: "EUR",
+    };
+
+    const wrapper = factory({}, store);
+    await localVue.nextTick(); // Skip created() life cycle data change
+
+    await wrapper.setData({ target: mockTarget });
+
+    const { source } = wrapper.vm.$data;
+
+    expect(source).toEqual(expectedResult);
+  });
 });
