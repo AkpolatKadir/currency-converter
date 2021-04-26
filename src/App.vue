@@ -26,12 +26,13 @@
         <CurrencyItem
           id="source"
           v-model="source"
-          title="Source"
+          title="Source Amount"
           :disabled="error"
           @onFocus="setFocus"
         />
 
         <font-awesome-icon
+          data-testid="icon-switch"
           class="switchIcon"
           icon="arrows-alt-h"
           size="4x"
@@ -42,7 +43,7 @@
         <CurrencyItem
           id="target"
           v-model="target"
-          title="Target"
+          title="Target Amount"
           :disabled="error"
           @onFocus="setFocus"
         />
