@@ -1,5 +1,7 @@
 # currency-converter
 
+A currency converter example written using Vue.js.
+
 ## Project setup
 ```
 npm install
